@@ -1,0 +1,533 @@
+{
+  "info": {
+    "_postman_id": "b5e7a8f1-3c5d-4e6a-8f9c-1d2e3f4a5b6c",
+    "name": "SMS API Collection",
+    "description": "Koleksi API untuk Sistem Manajemen Sekolah",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Autentikasi",
+      "item": [
+        {
+          "name": "Register User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"username\": \"testuser\",\n    \"email\": \"test@example.com\",\n    \"password\": \"testpassword123\",\n    \"first_name\": \"Test\",\n    \"last_name\": \"User\",\n    \"address\": \"Test Address\",\n    \"phone_number\": \"081234567890\"\n}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/users/register/",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "users",
+                "register",
+                ""
+              ]
+            },
+            "description": "Registrasi pengguna baru"
+          },
+          "response": []
+        },
+        {
+          "name": "Login User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"test@example.com\",\n    \"password\": \"testpassword123\"\n}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/users/login/",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "users",
+                "login",
+                ""
+              ]
+            },
+            "description": "Login pengguna"
+          },
+          "response": []
+        }
+      ],
+      "description": "Endpoint untuk autentikasi pengguna"
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Get All Users",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/users/",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "users",
+                ""
+              ]
+            },
+            "description": "Mendapatkan daftar semua pengguna"
+          },
+          "response": []
+        },
+        {
+          "name": "Create User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"username\": \"newuser\",\n    \"email\": \"newuser@example.com\",\n    \"password\": \"newpassword123\",\n    \"first_name\": \"New\",\n    \"last_name\": \"User\",\n    \"address\": \"New Address\",\n    \"phone_number\": \"089876543210\",\n    \"status\": \"active\"\n}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/users/",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "users",
+                ""
+              ]
+            },
+            "description": "Membuat pengguna baru"
+          },
+          "response": []
+        },
+        {
+          "name": "Get User Detail",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/users/1/",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "users",
+                "1",
+                ""
+              ]
+            },
+            "description": "Mendapatkan detail pengguna dengan ID 1"
+          },
+          "response": []
+        },
+        {
+          "name": "Update User",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"username\": \"updateduser\",\n    \"email\": \"updated@example.com\",\n    \"first_name\": \"Updated\",\n    \"last_name\": \"User\",\n    \"address\": \"Updated Address\",\n    \"phone_number\": \"087654321098\",\n    \"status\": \"active\"\n}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/users/1/",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "users",
+                "1",
+                ""
+              ]
+            },
+            "description": "Memperbarui pengguna dengan ID 1"
+          },
+          "response": []
+        },
+        {
+          "name": "Partial Update User",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"address\": \"New Updated Address\",\n    \"phone_number\": \"081122334455\"\n}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/users/1/",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "users",
+                "1",
+                ""
+              ]
+            },
+            "description": "Memperbarui sebagian data pengguna dengan ID 1"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete User",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/users/1/",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "users",
+                "1",
+                ""
+              ]
+            },
+            "description": "Menghapus pengguna dengan ID 1"
+          },
+          "response": []
+        }
+      ],
+      "description": "Endpoint untuk manajemen pengguna"
+    },
+    {
+      "name": "Roles",
+      "item": [
+        {
+          "name": "Get All Roles",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/roles/",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "roles",
+                ""
+              ]
+            },
+            "description": "Mendapatkan daftar semua peran"
+          },
+          "response": []
+        },
+        {
+          "name": "Create Role",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"role_name\": \"Teacher\",\n    \"description\": \"Role for teachers\"\n}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/roles/",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "roles",
+                ""
+              ]
+            },
+            "description": "Membuat peran baru"
+          },
+          "response": []
+        }
+      ],
+      "description": "Endpoint untuk manajemen peran"
+    },
+    {
+      "name": "Academic Years",
+      "item": [
+        {
+          "name": "Get All Academic Years",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/academic-years/",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "academic-years",
+                ""
+              ]
+            },
+            "description": "Mendapatkan daftar semua tahun akademik"
+          },
+          "response": []
+        },
+        {
+          "name": "Create Academic Year",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"year_name\": \"2023/2024\",\n    \"start_date\": \"2023-07-01\",\n    \"end_date\": \"2024-06-30\",\n    \"is_active\": true\n}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/academic-years/",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "academic-years",
+                ""
+              ]
+            },
+            "description": "Membuat tahun akademik baru"
+          },
+          "response": []
+        }
+      ],
+      "description": "Endpoint untuk manajemen tahun akademik"
+    },
+    {
+      "name": "Majors",
+      "item": [
+        {
+          "name": "Get All Majors",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/majors/",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "majors",
+                ""
+              ]
+            },
+            "description": "Mendapatkan daftar semua jurusan"
+          },
+          "response": []
+        },
+        {
+          "name": "Create Major",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"major_name\": \"Teknik Informatika\",\n    \"major_code\": \"TI\"\n}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/majors/",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "majors",
+                ""
+              ]
+            },
+            "description": "Membuat jurusan baru"
+          },
+          "response": []
+        }
+      ],
+      "description": "Endpoint untuk manajemen jurusan"
+    },
+    {
+      "name": "Subjects",
+      "item": [
+        {
+          "name": "Get All Subjects",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/subjects/",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "subjects",
+                ""
+              ]
+            },
+            "description": "Mendapatkan daftar semua mata pelajaran"
+          },
+          "response": []
+        },
+        {
+          "name": "Create Subject",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"subject_name\": \"Matematika\",\n    \"subject_code\": \"MTK\"\n}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/subjects/",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "subjects",
+                ""
+              ]
+            },
+            "description": "Membuat mata pelajaran baru"
+          },
+          "response": []
+        }
+      ],
+      "description": "Endpoint untuk manajemen mata pelajaran"
+    }
+  ]
+}
