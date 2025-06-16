@@ -77,4 +77,4 @@ log_message "Build process completed. Starting Gunicorn server..."
 # that contains your wsgi.py file.
 # The 'exec' command replaces the shell process with the Gunicorn process,
 # making it the main process (PID 1) in the container.
-exec gunicorn sms_project.wsgi:application --workers 9 --bind 0.0.0.0:8000
+exec gunicorn sms_project.wsgi:application --workers 5 --bind 0.0.0.0:8000
