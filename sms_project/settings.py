@@ -30,7 +30,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = 'VERCEL' not in os.environ
 
-ALLOWED_HOSTS = ['127.0.0.1', '.vercel.app', 'api.gozi.my.id', 'http://localhost:5173']
+ALLOWED_HOSTS = ['127.0.0.1', '.vercel.app', 'api.gozi.my.id']
 
 # CORS settings
 CORS_ALLOW_ALL_ORIGINS = True
@@ -113,14 +113,14 @@ WSGI_APPLICATION = 'sms_project.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
-        'USER': 'hadoy',
-        'PASSWORD': 'QcgrwvKijszWFPHujJk03eJf6iIMrZbEeHcSH8Ciw0m8bWU2cAUJ6tPsy232IDDA',
+        'NAME': 'sms',
+        'USER': 'root',
+        'PASSWORD': 'root',
         'HOST': '148.135.137.88',
-        'PORT': '5444',
+        'PORT': '5431',
     }
 }
-
+    
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
