@@ -32,6 +32,14 @@ DEBUG = 'VERCEL' not in os.environ
 
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '127.0.0.1,localhost').split(',')
 
+CSRF_TRUSTED_ORIGINS_str = os.environ.get('CSRF_TRUSTED_ORIGINS')
+if CSRF_TRUSTED_ORIGINS_str:
+    # Membaca dari environment variable jika ada, pisahkan dengan koma jika ada lebih dari satu
+    CSRF_TRUSTED_ORIGINS = CSRF_TRUSTED_ORIGINS_str.split(',')
+else:
+    # Kosongkan jika tidak di-set (cocok untuk development lokal dengan http)
+    CSRF_TRUSTED_ORIGINS = []
+
 # CORS settings
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
