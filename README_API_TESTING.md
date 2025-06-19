@@ -123,6 +123,48 @@ Berikut adalah daftar endpoint API yang tersedia pada sistem:
 - `PATCH /api/user-group-memberships/{id}/` - Memperbarui sebagian data keanggotaan grup
 - `DELETE /api/user-group-memberships/{id}/` - Menghapus keanggotaan grup
 
+### Modul Kehadiran (Attendance)
+
+- **Attendance Platform (Status Kehadiran)**
+  - `GET /api/attendance/platforms/` - Mendapatkan daftar status kehadiran
+  - `POST /api/attendance/platforms/` - Membuat status kehadiran baru
+  - `GET /api/attendance/platforms/{id}/` - Mendapatkan detail status kehadiran
+  - `PUT /api/attendance/platforms/{id}/` - Memperbarui status kehadiran
+  - `PATCH /api/attendance/platforms/{id}/` - Memperbarui sebagian data status kehadiran
+  - `DELETE /api/attendance/platforms/{id}/` - Menghapus status kehadiran
+
+- **School Holidays or Events (Hari Libur/Acara Sekolah)**
+  - `GET /api/attendance/holidays-events/` - Mendapatkan daftar hari libur/acara sekolah
+  - `POST /api/attendance/holidays-events/` - Membuat hari libur/acara sekolah baru
+  - `GET /api/attendance/holidays-events/{id}/` - Mendapatkan detail hari libur/acara sekolah
+  - `PUT /api/attendance/holidays-events/{id}/` - Memperbarui hari libur/acara sekolah
+  - `PATCH /api/attendance/holidays-events/{id}/` - Memperbarui sebagian data hari libur/acara sekolah
+  - `DELETE /api/attendance/holidays-events/{id}/` - Menghapus hari libur/acara sekolah
+
+- **Absence Requests (Permintaan Izin)**
+  - `GET /api/attendance/absence-requests/` - Mendapatkan daftar permintaan izin
+  - `POST /api/attendance/absence-requests/` - Membuat permintaan izin baru
+  - `GET /api/attendance/absence-requests/{id}/` - Mendapatkan detail permintaan izin
+  - `PUT /api/attendance/absence-requests/{id}/` - Memperbarui permintaan izin
+  - `PATCH /api/attendance/absence-requests/{id}/` - Memperbarui sebagian data permintaan izin
+  - `DELETE /api/attendance/absence-requests/{id}/` - Menghapus permintaan izin
+
+- **Absence Requests Attachments (Lampiran Permintaan Izin)**
+  - `GET /api/attendance/absence-attachments/` - Mendapatkan daftar lampiran permintaan izin
+  - `POST /api/attendance/absence-attachments/` - Membuat lampiran permintaan izin baru
+  - `GET /api/attendance/absence-attachments/{id}/` - Mendapatkan detail lampiran permintaan izin
+  - `PUT /api/attendance/absence-attachments/{id}/` - Memperbarui lampiran permintaan izin
+  - `PATCH /api/attendance/absence-attachments/{id}/` - Memperbarui sebagian data lampiran permintaan izin
+  - `DELETE /api/attendance/absence-attachments/{id}/` - Menghapus lampiran permintaan izin
+
+- **Attendances (Data Kehadiran)**
+  - `GET /api/attendance/records/` - Mendapatkan daftar data kehadiran
+  - `POST /api/attendance/records/` - Membuat data kehadiran baru
+  - `GET /api/attendance/records/{id}/` - Mendapatkan detail data kehadiran
+  - `PUT /api/attendance/records/{id}/` - Memperbarui data kehadiran
+  - `PATCH /api/attendance/records/{id}/` - Memperbarui sebagian data data kehadiran
+  - `DELETE /api/attendance/records/{id}/` - Menghapus data kehadiran
+
 ### Izin Peran (Role Permissions)
 - `GET /api/role-permissions/` - Mendapatkan daftar izin peran
 - `POST /api/role-permissions/` - Membuat izin peran baru

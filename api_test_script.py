@@ -21,10 +21,28 @@ USER_PASSWORD = "hexanestdotaidi"
 NUM_USERS = 150  # Jumlah pengguna simultan (concurrent users)
 DURATION_SECONDS = 30  # Durasi benchmark dalam detik
 REQUEST_MIX = {
-    "get_subjects": 0.5,  # 50% kemungkinan menjalankan GET /subjects/
-    "get_majors": 0.3,    # 30% kemungkinan menjalankan GET /majors/
-    "register_user": 0.2  # 20% kemungkinan mendaftarkan pengguna baru
+    "get_subjects": 0.10,
+    "get_majors": 0.10,
+    "register_user": 0.05, # Kurangi frekuensi register karena lebih berat
+    # Attendance Module Mix
+    "get_attendance_platforms": 0.20,
+    "create_attendance_platform": 0.10,
+    "get_school_holidays_or_events": 0.15,
+    # "create_school_holiday_or_event": 0.05, # Membutuhkan academic_year_id
+    "get_absence_requests": 0.15,
+    # "create_absence_request": 0.05, # Membutuhkan user_id & platform_id
+    "get_attendances": 0.10,
+    # "create_attendance_record": 0.05, # Membutuhkan user_id & platform_id
 }
+
+# Tambahkan fungsi create yang memerlukan ID ke API_ACTIONS jika ingin diuji dalam load test
+# Pastikan variabel global seperti DEFAULT_ACADEMIC_YEAR_ID, DEFAULT_ATTENDANCE_PLATFORM_ID, DEFAULT_USER_ID_FOR_ATTENDANCE
+# sudah diinisialisasi dengan benar sebelum benchmark dimulai (misalnya di setup_initial_data_for_attendance)
+
+# Contoh jika ingin memasukkan create_school_holiday_or_event ke dalam benchmark:
+# API_ACTIONS["create_school_holiday_or_event"] = create_school_holiday_or_event
+# REQUEST_MIX["create_school_holiday_or_event"] = 0.05 # Sesuaikan bobotnya
+# Pastikan worker_task meneruskan academic_year_id=DEFAULT_ACADEMIC_YEAR_ID saat memanggilnya.
 
 # ==============================================================================
 # HELPER FUNCTIONS
@@ -59,7 +77,7 @@ def get_auth_headers(token):
     return {'Authorization': f'Token {token}'}
 
 # ==============================================================================
-# FUNGSI API UNTUK BENCHMARK
+# FUNGSI API UNTUK BENCHMARK (USERS)
 # ==============================================================================
 
 # Fungsi yang akan diuji di bawah beban
@@ -96,10 +114,89 @@ def register_user(session, headers, created_user_ids, lock):
 # Fungsi untuk teardown (membersihkan data)
 def delete_user(session, headers, user_id):
     """Menghapus pengguna berdasarkan ID."""
-    # Endpoint ini mengasumsikan Anda memiliki hak untuk menghapus pengguna
-    # Mungkin perlu disesuaikan dengan API Anda, misal: /users/{id}/delete/
     url = f"{BASE_URL}/users/{user_id}/"
     return session.delete(url, headers=headers)
+
+# ==============================================================================
+# FUNGSI API UNTUK MODUL ATTENDANCE
+# ==============================================================================
+
+# --- AttendancePlatform --- 
+def get_attendance_platforms(session, headers, **kwargs):
+    return session.get(f"{BASE_URL}/attendance/platforms/", headers=headers, timeout=10)
+
+def create_attendance_platform(session, headers, **kwargs):
+    timestamp = time.time_ns()
+    data = {
+        "status_code": f"CODE_{timestamp}",
+        "status_name": f"Status Name {timestamp}",
+        "is_agent_approval": random.choice([True, False])
+    }
+    return session.post(f"{BASE_URL}/attendance/platforms/", json=data, headers=headers, timeout=10)
+
+def get_attendance_platform_detail(session, headers, platform_id, **kwargs):
+    return session.get(f"{BASE_URL}/attendance/platforms/{platform_id}/", headers=headers, timeout=10)
+
+def update_attendance_platform(session, headers, platform_id, **kwargs):
+    data = {
+        "status_name": f"Updated Status Name {time.time_ns()}"
+    }
+    return session.put(f"{BASE_URL}/attendance/platforms/{platform_id}/", json=data, headers=headers, timeout=10)
+
+def delete_attendance_platform(session, headers, platform_id, **kwargs):
+    return session.delete(f"{BASE_URL}/attendance/platforms/{platform_id}/", headers=headers, timeout=10)
+
+# --- SchoolHolidaysOrEvents --- 
+def get_school_holidays_or_events(session, headers, **kwargs):
+    return session.get(f"{BASE_URL}/attendance/holidays-events/", headers=headers, timeout=10)
+
+def create_school_holiday_or_event(session, headers, academic_year_id, **kwargs):
+    timestamp = time.time_ns()
+    start_date = f"2024-{random.randint(1,12):02d}-{random.randint(1,28):02d}"
+    end_date = start_date # Untuk sederhana, buat acara satu hari
+    data = {
+        "event_name": f"Event {timestamp}",
+        "description": "Deskripsi acara benchmark",
+        "event_date_start": start_date,
+        "event_date_end": end_date,
+        "is_school_off": random.choice([True, False]),
+        "target_audience_type": random.choice(['Students_Only', 'Teachers_Only', 'All_Users']),
+        "academic_year": academic_year_id # Asumsi academic_year_id valid
+    }
+    return session.post(f"{BASE_URL}/attendance/holidays-events/", json=data, headers=headers, timeout=10)
+
+# --- AbsenceRequests --- 
+def get_absence_requests(session, headers, **kwargs):
+    return session.get(f"{BASE_URL}/attendance/absence-requests/", headers=headers, timeout=10)
+
+def create_absence_request(session, headers, user_id, platform_id, **kwargs):
+    start_date = f"2024-{random.randint(1,12):02d}-{random.randint(1,28):02d}"
+    end_date = start_date
+    data = {
+        "requester_user": user_id, # Asumsi user_id valid
+        "absence_type_status": platform_id, # Asumsi platform_id valid
+        "start_date": start_date,
+        "end_date": end_date,
+        "reason": f"Alasan izin benchmark {time.time_ns()}",
+        "approval_status": "Pending"
+    }
+    return session.post(f"{BASE_URL}/attendance/absence-requests/", json=data, headers=headers, timeout=10)
+
+# --- Attendances --- 
+def get_attendances(session, headers, **kwargs):
+    return session.get(f"{BASE_URL}/attendance/records/", headers=headers, timeout=10)
+
+def create_attendance_record(session, headers, user_id, platform_id, **kwargs):
+    attendance_date = f"2024-{random.randint(1,12):02d}-{random.randint(1,28):02d}"
+    clock_in_time = f"{random.randint(7,9):02d}:{random.randint(0,59):02d}:00"
+    data = {
+        "employee_user": user_id, # Asumsi user_id valid
+        "attendance_date": attendance_date,
+        "attendance_status": platform_id, # Asumsi platform_id valid
+        "clock_in_time": clock_in_time
+    }
+    return session.post(f"{BASE_URL}/attendance/records/", json=data, headers=headers, timeout=10)
+
 
 # ==============================================================================
 # LOGIKA BENCHMARK KONKUREN
@@ -109,7 +206,66 @@ API_ACTIONS = {
     "get_subjects": get_subjects,
     "get_majors": get_majors,
     "register_user": register_user,
+    # Attendance Module Actions
+    "get_attendance_platforms": get_attendance_platforms,
+    "create_attendance_platform": create_attendance_platform,
+    # "get_attendance_platform_detail": get_attendance_platform_detail, # Perlu ID, lebih cocok untuk test fungsional
+    # "update_attendance_platform": update_attendance_platform, # Perlu ID
+    # "delete_attendance_platform": delete_attendance_platform, # Perlu ID
+    "get_school_holidays_or_events": get_school_holidays_or_events,
+    # "create_school_holiday_or_event": create_school_holiday_or_event, # Perlu academic_year_id
+    "get_absence_requests": get_absence_requests,
+    # "create_absence_request": create_absence_request, # Perlu user_id dan platform_id
+    "get_attendances": get_attendances,
+    # "create_attendance_record": create_attendance_record, # Perlu user_id dan platform_id
 }
+
+# Variabel global untuk menyimpan ID yang dibuat agar bisa di-pass ke fungsi create
+# Ini adalah penyederhanaan untuk benchmark, idealnya ID ini didapat dari GET request sebelumnya
+# atau dari data fixture yang sudah ada di database.
+# Untuk benchmark ini, kita akan coba buat beberapa platform dan academic year di awal jika belum ada.
+
+# ID default jika tidak ditemukan atau gagal dibuat (HARUS ADA DI DATABASE ANDA)
+DEFAULT_ACADEMIC_YEAR_ID = 1 
+DEFAULT_ATTENDANCE_PLATFORM_ID = 1 
+DEFAULT_USER_ID_FOR_ATTENDANCE = 1 # ID user yang akan digunakan untuk membuat data absensi
+
+def setup_initial_data_for_attendance(token):
+    """Mencoba membuat data awal yang dibutuhkan oleh modul attendance jika belum ada."""
+    global DEFAULT_ACADEMIC_YEAR_ID, DEFAULT_ATTENDANCE_PLATFORM_ID
+    headers = get_auth_headers(token)
+    with requests.Session() as session:
+        # Cek atau buat Academic Year
+        try:
+            response_ay = session.get(f"{BASE_URL}/academic-years/", headers=headers, timeout=5)
+            if response_ay.status_code == 200 and response_ay.json():
+                DEFAULT_ACADEMIC_YEAR_ID = response_ay.json()[0]['id']
+                print_colored(f"[SETUP] Menggunakan Academic Year ID: {DEFAULT_ACADEMIC_YEAR_ID}", "BLUE")
+            else:
+                # Coba buat jika tidak ada (sesuaikan data jika perlu)
+                ay_data = {"year_name": "AY Benchmark", "start_date": "2024-01-01", "end_date": "2024-12-31", "is_active": True}
+                response_create_ay = session.post(f"{BASE_URL}/academic-years/", json=ay_data, headers=headers, timeout=5)
+                if response_create_ay.status_code == 201:
+                    DEFAULT_ACADEMIC_YEAR_ID = response_create_ay.json()['id']
+                    print_colored(f"[SETUP] Membuat Academic Year ID: {DEFAULT_ACADEMIC_YEAR_ID}", "GREEN")
+        except Exception as e:
+            print_colored(f"[SETUP] Gagal setup Academic Year: {e}", "WARNING")
+
+        # Cek atau buat Attendance Platform
+        try:
+            response_ap = session.get(f"{BASE_URL}/attendance/platforms/", headers=headers, timeout=5)
+            if response_ap.status_code == 200 and response_ap.json():
+                DEFAULT_ATTENDANCE_PLATFORM_ID = response_ap.json()[0]['id']
+                print_colored(f"[SETUP] Menggunakan Attendance Platform ID: {DEFAULT_ATTENDANCE_PLATFORM_ID}", "BLUE")
+            else:
+                ap_data = {"status_code": "PRESENT_BM", "status_name": "Hadir (Benchmark)"}
+                response_create_ap = session.post(f"{BASE_URL}/attendance/platforms/", json=ap_data, headers=headers, timeout=5)
+                if response_create_ap.status_code == 201:
+                    DEFAULT_ATTENDANCE_PLATFORM_ID = response_create_ap.json()['id']
+                    print_colored(f"[SETUP] Membuat Attendance Platform ID: {DEFAULT_ATTENDANCE_PLATFORM_ID}", "GREEN")
+        except Exception as e:
+            print_colored(f"[SETUP] Gagal setup Attendance Platform: {e}", "WARNING")
+
 
 def worker_task(token, created_user_ids, lock):
     """Fungsi yang dijalankan oleh setiap pengguna virtual (pekerja)."""
@@ -131,12 +287,24 @@ def worker_task(token, created_user_ids, lock):
                 
                 req_start_time = time.time()
                 # Teruskan argumen yang relevan ke fungsi API
-                response = api_function(
-                    session=session, 
-                    headers=headers_with_auth, 
-                    created_user_ids=created_user_ids, 
-                    lock=lock
-                )
+                # Beberapa fungsi create memerlukan ID tambahan
+                action_kwargs = {
+                    "session": session,
+                    "headers": headers_with_auth,
+                    "created_user_ids": created_user_ids, # Untuk register_user
+                    "lock": lock # Untuk register_user
+                }
+                if chosen_action_name == "create_school_holiday_or_event":
+                    action_kwargs["academic_year_id"] = DEFAULT_ACADEMIC_YEAR_ID
+                elif chosen_action_name == "create_absence_request":
+                    action_kwargs["user_id"] = DEFAULT_USER_ID_FOR_ATTENDANCE
+                    action_kwargs["platform_id"] = DEFAULT_ATTENDANCE_PLATFORM_ID
+                elif chosen_action_name == "create_attendance_record":
+                    action_kwargs["user_id"] = DEFAULT_USER_ID_FOR_ATTENDANCE
+                    action_kwargs["platform_id"] = DEFAULT_ATTENDANCE_PLATFORM_ID
+                
+                response = api_function(**action_kwargs)
+
                 req_end_time = time.time()
 
                 stats["total_time"] += (req_end_time - req_start_time)
@@ -159,9 +327,13 @@ def run_load_test():
 
     token = login_user()
     if not token:
-        # Jika login gagal, beberapa aksi mungkin tidak bisa dilakukan
-        # Namun, kita bisa lanjutkan untuk menguji endpoint publik seperti register
-        print_colored("Login gagal, melanjutkan tanpa token otorisasi untuk beberapa endpoint.", "WARNING")
+        print_colored("Login gagal. Benchmark tidak dapat dilanjutkan tanpa token otentikasi yang valid.", "FAIL")
+        return
+
+    # Setup data awal untuk modul attendance
+    print_colored("\n[SETUP] Menyiapkan data awal untuk modul Attendance...", 'HEADER')
+    setup_initial_data_for_attendance(token)
+    print_colored("[SETUP] Selesai menyiapkan data awal.", 'GREEN')
 
     # Shared list dan lock untuk mengumpulkan ID pengguna yang baru dibuat
     created_user_ids = []

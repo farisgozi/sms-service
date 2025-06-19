@@ -78,7 +78,8 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     
     # Local apps
-    'users'
+    'users',
+    'attendance' # Tambahkan aplikasi attendance
 ]
 
 MIDDLEWARE = [
