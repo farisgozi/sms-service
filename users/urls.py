@@ -8,6 +8,8 @@ from .views import (
     RolePermissionViewSet
 )
 
+from attendance.urls import router as attendance_router
+
 router = DefaultRouter()
 router.register(r'users', UserViewSet)
 router.register(r'roles', RoleViewSet)
@@ -24,6 +26,10 @@ router.register(r'classes', ClassViewSet)
 router.register(r'teacher-subjects', TeacherSubjectViewSet)
 router.register(r'user-group-memberships', UserGroupMembershipViewSet)
 router.register(r'role-permissions', RolePermissionViewSet)
+
+# Gabungkan router dari attendance
+for prefix, viewset, basename in attendance_router.registry:
+    router.register(prefix, viewset, basename)
 
 urlpatterns = [
     path('', include(router.urls)),

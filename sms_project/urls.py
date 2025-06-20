@@ -19,6 +19,5 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include('users.urls')),
-    path('api/', include('attendance.urls')) # Tambahkan URL attendance
+    path('api/', include('users.urls')), # users.urls sekarang juga mencakup attendance.urls
 ]
