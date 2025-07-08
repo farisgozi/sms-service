@@ -28,4 +28,4 @@ RUN python manage.py migrate --noinput && python manage.py collectstatic --noinp
 EXPOSE 8000
 
 # Jalankan server Django
-CMD ["gunicorn", "sms_project.wsgi:application", "--bind", "0.0.0.0:8000"]
+ENTRYPOINT ["/entrypoint.sh"]
