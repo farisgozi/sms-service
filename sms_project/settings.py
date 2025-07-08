@@ -30,7 +30,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = 'VERCEL' not in os.environ
 
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '127.0.0.1,localhost,sms.hexanest.id').split(',')
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'sms.hexanest.id').split(',')
 
 CSRF_TRUSTED_ORIGINS_str = os.environ.get('CSRF_TRUSTED_ORIGINS')
 if CSRF_TRUSTED_ORIGINS_str:
