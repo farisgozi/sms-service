@@ -34,7 +34,8 @@ ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'sms.hexanest.id').split(',')
 
 CSRF_TRUSTED_ORIGINS_str = os.environ.get('CSRF_TRUSTED_ORIGINS')
 if CSRF_TRUSTED_ORIGINS_str:
-    # Membaca dari environment variable jika ada, pisahkan dengan koma jika ada lebih dari satu
+    # Membaca dari environment variable jika ad
+    Origin checking failed - https://sms.hexanest.id does not match any trusted origina, pisahkan dengan koma jika ada lebih dari satu
     CSRF_TRUSTED_ORIGINS = CSRF_TRUSTED_ORIGINS_str.split(',')
 else:
     # Kosongkan jika tidak di-set (cocok untuk development lokal dengan http)
@@ -43,6 +44,15 @@ else:
 # CORS settings
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
+
+LOGIN_REDIRECT_URL = '/api'
+
+# 2. Pengaturan keamanan untuk production di belakang proxy (HTTPS)
+if not DEBUG:
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
 
 # Vercel deployment settings
 
@@ -73,6 +83,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     
+    Origin checking failed - https://sms.hexanest.id does not match any trusted origin
     # Third party apps
     'rest_framework',
     'rest_framework.authtoken',
