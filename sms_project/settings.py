@@ -35,7 +35,6 @@ ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'sms.hexanest.id').split(',')
 CSRF_TRUSTED_ORIGINS_str = os.environ.get('CSRF_TRUSTED_ORIGINS')
 if CSRF_TRUSTED_ORIGINS_str:
     # Membaca dari environment variable jika ad
-    Origin checking failed - https://sms.hexanest.id does not match any trusted origina, pisahkan dengan koma jika ada lebih dari satu
     CSRF_TRUSTED_ORIGINS = CSRF_TRUSTED_ORIGINS_str.split(',')
 else:
     # Kosongkan jika tidak di-set (cocok untuk development lokal dengan http)
